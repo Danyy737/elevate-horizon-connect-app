@@ -12,8 +12,37 @@ import {
 
 import { fetchEvents } from '@/src/data/eventsApi';
 
+function isEventHappeningToday(event: any) {
+  const today = new Date();
+
+  const startOfToday = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    0,
+    0,
+    0
+  );
+
+  const endOfToday = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    23,
+    59,
+    59
+  );
+
+  const eventStart = new Date(`${event.date}T${event.startTime}`);
+  const eventEnd = new Date(`${event.date}T${event.endTime}`);
+
+  return eventStart <= endOfToday && eventEnd >= startOfToday;
+}
+
 export default function EventsScreen() {
   const [events, setEvents] = useState<any[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -23,7 +52,6 @@ export default function EventsScreen() {
       setError('');
 
       const data: any = await fetchEvents();
-
       setEvents(data);
     } catch (err) {
       setError('Failed to load events.');
@@ -35,6 +63,27 @@ export default function EventsScreen() {
   useEffect(() => {
     loadEvents();
   }, []);
+
+  const filteredEvents = events.filter((event) => {
+    const matchesSearch =
+      event.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchText.toLowerCase()) ||
+      event.category.toLowerCase().includes(searchText.toLowerCase());
+
+    if (!matchesSearch) {
+      return false;
+    }
+
+    if (selectedFilter === 'Today') {
+      return isEventHappeningToday(event);
+    }
+
+    if (selectedFilter === 'All') {
+      return true;
+    }
+
+    return event.category === selectedFilter;
+  });
 
   if (loading) {
     return (
@@ -61,41 +110,56 @@ export default function EventsScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.heading}>All Events</Text>
 
-      <TextInput style={styles.search} placeholder="Search by keyword..." />
+      <TextInput
+        style={styles.search}
+        placeholder="Search by keyword..."
+        value={searchText}
+        onChangeText={setSearchText}
+      />
 
       <View style={styles.filterRow}>
         {['All', 'Today', 'Fitness', 'Social', 'Music', 'Outdoors'].map((filter) => (
-          <View key={filter} style={[styles.chip, filter === 'All' && styles.activeChip]}>
-            <Text style={filter === 'All' ? styles.activeChipText : styles.chipText}>
+          <TouchableOpacity
+            key={filter}
+            style={[styles.chip, selectedFilter === filter && styles.activeChip]}
+            onPress={() => setSelectedFilter(filter)}
+          >
+            <Text style={selectedFilter === filter ? styles.activeChipText : styles.chipText}>
               {filter}
             </Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
 
-      <Text style={styles.results}>Showing {events.length} events</Text>
+      <Text style={styles.results}>
+        Showing {filteredEvents.length} {selectedFilter === 'Today' ? 'today/current' : selectedFilter} events
+      </Text>
 
-      {events.map((event) => (
-        <Link key={event.id} href={`/event-details?id=${event.id}`} asChild>
-          <TouchableOpacity style={styles.eventCard}>
-            <Text style={styles.eventTitle}>{event.title}</Text>
+      {filteredEvents.length === 0 ? (
+        <View style={styles.emptyCard}>
+          <Text style={styles.emptyText}>No events match this filter.</Text>
+        </View>
+      ) : (
+        filteredEvents.map((event) => (
+          <Link key={event.id} href={`/event-details?id=${event.id}`} asChild>
+            <TouchableOpacity style={styles.eventCard}>
+              <Text style={styles.eventTitle}>{event.title}</Text>
 
-            <Text style={styles.meta}>
-              📅 {event.date}   ⏰ {event.startTime}–{event.endTime}
-            </Text>
+              <Text style={styles.meta}>
+                📅 {event.date}   ⏰ {event.startTime}–{event.endTime}
+              </Text>
 
-            <Text style={styles.meta}>📍 {event.location}</Text>
+              <Text style={styles.meta}>📍 {event.location}</Text>
 
-            <Text style={styles.spots}>
-              Spots remaining: {event.spotsRemaining}
-            </Text>
+              <Text style={styles.spots}>Spots remaining: {event.spotsRemaining}</Text>
 
-            <View style={styles.tag}>
-              <Text style={styles.tagText}>{event.category}</Text>
-            </View>
-          </TouchableOpacity>
-        </Link>
-      ))}
+              <View style={styles.tag}>
+                <Text style={styles.tagText}>{event.category}</Text>
+              </View>
+            </TouchableOpacity>
+          </Link>
+        ))
+      )}
     </ScrollView>
   );
 }
@@ -191,6 +255,17 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '700',
     marginBottom: 12,
+  },
+
+  emptyCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+  },
+
+  emptyText: {
+    color: '#424754',
+    fontWeight: '700',
   },
 
   eventCard: {
