@@ -70,10 +70,11 @@ export default function EventDetailsScreen() {
           onPress={() =>
             router.push({
               pathname: '/register',
-              params: {
-                eventId: String(event.id),
-                eventTitle: event.title,
-              },
+            params: {
+  eventId: String(event.id),
+  eventTitle: event.title,
+  spotsRemaining: String(event.spotsRemaining),
+},
             })
           }
         >

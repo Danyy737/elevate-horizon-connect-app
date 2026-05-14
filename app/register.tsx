@@ -1,11 +1,12 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { createRegistration, createUser } from '@/src/data/backendApi';
+import { createRegistration, createUser, updateEventSpotsRemaining } from '@/src/data/backendApi';
+
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const { eventId, eventTitle } = useLocalSearchParams();
+ const { eventId, eventTitle, spotsRemaining } = useLocalSearchParams();
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -44,6 +45,15 @@ export default function RegisterScreen() {
   email,
   phone,
 });
+
+try {
+  await updateEventSpotsRemaining(
+    Number(eventId),
+    Math.max(Number(spotsRemaining) - 1, 0)
+  );
+} catch (error) {
+  console.log('Spots update failed, but registration was created.');
+}
 
       setMessage(`Registration Successful — you are booked for ${eventTitle}.`);
       setFullName('');

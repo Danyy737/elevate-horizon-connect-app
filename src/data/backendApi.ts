@@ -44,3 +44,19 @@ export async function createRegistration(registrationData: {
 
   return response.json();
 }
+
+export async function updateEventSpotsRemaining(eventId: number, spotsRemaining: number) {
+  const response = await fetch(`${API_BASE_URL}/events/${eventId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ spotsRemaining }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.log('Event update error:', response.status, errorText);
+    throw new Error('Unable to update event spots');
+  }
+
+  return response.json();
+}
