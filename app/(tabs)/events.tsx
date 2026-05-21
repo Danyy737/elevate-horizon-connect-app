@@ -90,7 +90,7 @@ export default function EventsScreen() {
       />
 
       <View style={styles.filterRow}>
-        {['All', 'Today', 'Fitness', 'Social', 'Music', 'Outdoors'].map((filter) => (
+        {['All', 'Today', 'Fitness', 'Social', 'Music', 'Outdoor'].map((filter) => (
           <TouchableOpacity
             key={filter}
             style={[styles.chip, selectedFilter === filter && styles.activeChip]}
