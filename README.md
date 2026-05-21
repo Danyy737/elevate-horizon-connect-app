@@ -53,7 +53,36 @@ The app connects to the provided Elevate Horizon API to:
 
 ## How to Run
 
-1. Install dependencies
+### 1. Install dependencies
 
 ```bash
 npm install
+```
+
+### 2. Start the Expo development server
+
+```bash
+npx expo start
+```
+
+### 3. Open the app using:
+
+- Expo Go
+- Android Emulator
+- iOS Simulator
+
+---
+
+## Repository
+
+GitHub Repository:
+
+https://github.com/Danyy737/elevate-horizon-connect-app
+
+---
+
+## Developer
+
+Daniel Mourad
+
+---
