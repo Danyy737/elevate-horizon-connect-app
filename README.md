@@ -1,54 +1,59 @@
-HEAD
-# Welcome to your Expo app 👋
+# Elevate Horizon Connect
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Elevate Horizon Connect is a mobile community events application built using Expo and React Native. The application allows users to browse community events, filter/search events, view event details, and register for events using a remote API.
 
-## Get started
+---
+
+## Features
+
+- Browse community events
+- Search and filter events
+- View detailed event information
+- Register for events
+- Real API integration
+- Loading and error handling
+- Global dark mode
+- Global text size accessibility settings
+- Responsive mobile UI
+- Bottom tab navigation
+
+---
+
+## Technologies Used
+
+- React Native
+- Expo
+- TypeScript
+- Expo Router
+- REST API Integration
+- GitHub Version Control
+
+---
+
+## Accessibility Features
+
+- Global dark mode support
+- Adjustable text sizes
+- Clear readable UI
+- Consistent navigation flow
+- Accessible touch targets
+
+---
+
+## API Integration
+
+The app connects to the provided Elevate Horizon API to:
+
+- Fetch events
+- Create users
+- Register users for events
+- Update remaining event spots
+
+---
+
+## How to Run
 
 1. Install dependencies
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
 ```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-=======
-# elevate-horizon-connect-app
->>>>>>> fedfc39e52b3f2743db92130ace48a2cfb970943
+npm install
