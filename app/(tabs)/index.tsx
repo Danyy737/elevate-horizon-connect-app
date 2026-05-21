@@ -1,5 +1,6 @@
 import { Link } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSettings } from './settingscontext';
 
 const events = [
   {
@@ -21,53 +22,84 @@ const events = [
 ];
 
 export default function HomeScreen() {
+  const { darkMode, fontSize } = useSettings();
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={[styles.container, darkMode && styles.darkContainer]}
+      contentContainerStyle={styles.content}
+    >
       <View style={styles.header}>
         <Text style={styles.logoText}>Elevate Horizon Connect</Text>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.title}>Welcome</Text>
-        <Text style={styles.subtitle}>Find and register for community events</Text>
+      <View style={[styles.topCard, darkMode && styles.darkCard]}>
+        <Text style={[styles.title, darkMode && styles.darkText, { fontSize: fontSize + 8 }]}>
+          Welcome
+        </Text>
+
+        <Text style={[styles.subtitle, darkMode && styles.darkText, { fontSize }]}>
+          Find and register for community events
+        </Text>
 
         <Link href="/events" asChild>
-          <TouchableOpacity style={styles.outlineButton}>
-            <Text style={styles.outlineButtonText}>View Today’s Events</Text>
+          <TouchableOpacity style={[styles.outlineButton, darkMode && styles.darkOutlineButton]}>
+            <Text style={[styles.outlineButtonText, darkMode && styles.darkText]}>
+              View Today’s Events
+            </Text>
           </TouchableOpacity>
         </Link>
       </View>
 
-      <TextInput style={styles.search} placeholder="Search Events..." />
+      <TextInput
+        style={styles.search}
+        placeholder="Search Events..."
+        placeholderTextColor="#777"
+      />
 
       <View style={styles.chipRow}>
         {['Athletics', 'Today', 'Fitness', 'Music', 'Social', 'Outdoors', 'Family'].map((chip) => (
           <View key={chip} style={[styles.chip, chip === 'Today' && styles.activeChip]}>
-            <Text style={chip === 'Today' ? styles.activeChipText : styles.chipText}>{chip}</Text>
+            <Text style={chip === 'Today' ? styles.activeChipText : styles.chipText}>
+              {chip}
+            </Text>
           </View>
         ))}
       </View>
 
-      <Text style={styles.results}>Showing: Today • 2 results</Text>
+      <View style={[styles.resultsSection, darkMode && styles.darkCard]}>
+        <Text style={[styles.results, darkMode && styles.darkText]}>
+          Showing: Today • 2 results
+        </Text>
 
-      {events.map((event) => (
-       <Link key={event.id} href={`/event-details?id=${event.id}`} asChild>
-          <TouchableOpacity style={styles.eventCard}>
-            <Text style={styles.eventTitle}>{event.title}</Text>
-            <Text style={styles.eventMeta}>⏰ {event.time}   📍 {event.location}</Text>
-            <Text style={styles.spots}>Spots remaining: {event.spots}</Text>
+        {events.map((event) => (
+          <Link key={event.id} href={`/event-details?id=${event.id}`} asChild>
+            <TouchableOpacity style={[styles.eventCard, darkMode && styles.darkEventCard]}>
+              <Text style={[styles.eventTitle, darkMode && styles.darkText, { fontSize }]}>
+                {event.title}
+              </Text>
 
-            <View style={styles.chipRowSmall}>
-              <View style={styles.chipSmall}>
-                <Text>{event.category}</Text>
+              <Text style={[styles.eventMeta, darkMode && styles.darkText]}>
+                ⏰ {event.time}   📍 {event.location}
+              </Text>
+
+              <Text style={[styles.spots, darkMode && styles.darkText]}>
+                Spots remaining: {event.spots}
+              </Text>
+
+              <View style={styles.chipRowSmall}>
+                <View style={styles.chipSmall}>
+                  <Text style={styles.chipText}>{event.category}</Text>
+                </View>
+
+                <View style={[styles.chipSmall, styles.activeChip]}>
+                  <Text style={styles.activeChipText}>Today</Text>
+                </View>
               </View>
-              <View style={[styles.chipSmall, styles.activeChip]}>
-                <Text style={styles.activeChipText}>Today</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </Link>
-      ))}
+            </TouchableOpacity>
+          </Link>
+        ))}
+      </View>
     </ScrollView>
   );
 }
@@ -75,6 +107,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#2F86B7',
+  },
+  darkContainer: {
+    backgroundColor: '#1E1E1E',
   },
   content: {
     padding: 20,
@@ -94,12 +129,42 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     letterSpacing: 1,
   },
-  card: {
+  topCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 18,
     marginBottom: 16,
     elevation: 4,
+  },
+  resultsSection: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 14,
+    marginTop: 4,
+    marginBottom: 20,
+    elevation: 4,
+  },
+  eventCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 14,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    elevation: 2,
+  },
+  darkCard: {
+    backgroundColor: '#2B2B2B',
+  },
+  darkEventCard: {
+    backgroundColor: '#3A3A3A',
+    borderColor: '#555',
+  },
+  darkText: {
+    color: '#FFFFFF',
+  },
+  darkOutlineButton: {
+    borderColor: '#FFFFFF',
   },
   title: {
     fontSize: 26,
@@ -153,26 +218,22 @@ const styles = StyleSheet.create({
   results: {
     color: '#424754',
     fontWeight: '700',
-    marginBottom: 12,
-    fontSize: 16,
-  },
-  eventCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 12,
-    elevation: 4,
-  },
-  eventTitle: {
-    fontWeight: '700',
     fontSize: 16,
     marginBottom: 4,
   },
+  eventTitle: {
+    color: '#424754',
+    fontWeight: '700',
+    fontSize: 16,
+    marginBottom: 6,
+  },
   eventMeta: {
+    color: '#424754',
     fontWeight: '600',
     marginBottom: 6,
   },
   spots: {
+    color: '#424754',
     fontSize: 12,
     marginBottom: 10,
   },
