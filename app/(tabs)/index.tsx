@@ -1,6 +1,7 @@
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
+  Image,
   ActivityIndicator,
   ScrollView,
   StyleSheet,
@@ -66,8 +67,12 @@ const visibleEvents = filteredEvents;
       contentContainerStyle={styles.content}
     >
       <View style={styles.header}>
-        <Text style={styles.logoText}>Elevate Horizon Connect</Text>
-      </View>
+  <Image
+    source={require('../../assets/images/logo.jpg')}
+    style={styles.logo}
+    resizeMode="contain"
+  />
+</View>
 
       <View style={[styles.card, darkMode && styles.darkCard]}>
         <Text style={[styles.title, darkMode && styles.darkText, { fontSize: fontSize + 8 }]}>
@@ -238,4 +243,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 14,
   },
+
+  logo: {
+  width: 260,
+  height: 100,
+  alignSelf: 'center',
+},
 });
