@@ -18,7 +18,17 @@ Elevate Horizon Connect is a mobile community events application built using Exp
 - Bottom tab navigation
 
 ---
+## Screens
 
+* Home
+* Events
+* Event Details
+* Register
+* Settings
+
+The application allows users to browse community events, view event information, register for events, and customise accessibility preferences such as dark mode and text size.
+
+---
 ## Technologies Used
 
 - React Native
